@@ -1,0 +1,32 @@
+
+// NOTE: must separate commands with ;
+// input is case-insensitive
+
+// For now, SERVICE looks like a method call and VERIFY requires quotes
+
+// initial state
+// N = name, P = price, C = count 
+SERVICE ([50, 50, 50, 50], [ [N:'A', P:'65', C:'10'], [N:'B', P:'100', C:'10'], [N:'C', P:'150', C:'10'] ])
+
+VERIFY "[50, 50, 50, 50] [0, 0, 0, 0] [ [N:'A', P:'65', C:'10'], [N:'B', P:'100', C:'10'], [N:'C', P:'150', C:'10'] ]"
+
+Q ; Q ; Q ; Q
+
+VERIFY "[50, 50, 50, 50] [0, 4, 0, 0] [ [N:'A', P:'65', C:'10'], [N:'B', P:'100', C:'10'], [N:'C', P:'150', C:'10'] ]"
+
+N ; D ; Q ; $ 
+
+VERIFY "[50, 50, 50, 50] [1, 5, 1, 1] [ [N:'A', P:'65', C:'10'], [N:'B', P:'100', C:'10'], [N:'C', P:'150', C:'10'] ]"
+
+$ ; Q ; D ; N 
+
+VERIFY "[50, 50, 50, 50] [2, 6, 2, 2] [ [N:'A', P:'65', C:'10'], [N:'B', P:'100', C:'10'], [N:'C', P:'150', C:'10'] ]"
+
+COIN_RETURN 
+
+VERIFY "[50, 50, 50, 50] [0, 0, 0, 0] [ [N:'A', P:'65', C:'10'], [N:'B', P:'100', C:'10'], [N:'C', P:'150', C:'10'] ]"
+
+COIN_RETURN ; SERVICE ([20, 20, 20, 20], [ [N:'A', P:'65', C:'10'], [N:'B', P:'100', C:'10'], [N:'C', P:'150', C:'10'] ]) ; $ ; $ 
+
+VERIFY "[20, 20, 20, 20] [2, 0, 0, 0] [ [N:'A', P:'65', C:'10'], [N:'B', P:'100', C:'10'], [N:'C', P:'150', C:'10'] ]"
+
