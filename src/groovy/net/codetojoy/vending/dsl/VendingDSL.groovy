@@ -15,30 +15,31 @@ class Machine {
     def machineState = new MachineState()
     
     def service(def coinList, def inventoryMap) {
-        println 'service'
-        def moneyState = new MoneyState(coinList)        
-        def inventory = new InventoryState(inventoryMap)
-        def action = new ServiceAction(moneyState, inventory)        
-        action.apply(machineState)
+        machineState.availableChange = new MoneyState(coinList)
+        machineState.inventoryState = new InventoryState(inventoryMap)        
     }
     
-    def verify(def expected) {
-        println "verify"
-        def action = new VerifyAction(expected)
-        action.apply(machineState)
+    def verify(def expectedStr) {
+        def expected = expectedStr.trim()
+        def actual = machineState.toString()
+        
+        if (actual != expected) {
+            println "EXPECTED = .${expected}."
+            println "ACTUAL .${actual}."            
+        }
+        
+        assert expected == actual
     }
     
-    def getN() { new CoinAction(MoneyState.NICKEL).apply(machineState) }
-    def getD() { new CoinAction(MoneyState.DIME).apply(machineState) }
-    def getQ() { new CoinAction(MoneyState.QUARTER).apply(machineState) }
-    def getR() { new CoinAction(MoneyState.DOLLAR).apply(machineState) }
+    def getN() { machineState.addInsertedMoney(MoneyState.NICKEL) }
+    def getD() { machineState.addInsertedMoney(MoneyState.DIME) }
+    def getQ() { machineState.addInsertedMoney(MoneyState.QUARTER) }
+    def getR() { machineState.addInsertedMoney(MoneyState.DOLLAR) }
     
-    def getCoinreturn() { new CoinReturnAction().apply(machineState) }
+    def getCoinreturn() { machineState.insertedMoney = MoneyState.ZERO }
     
     def get(def item) {
-        def action = new GetAction(item)
-        action.apply(machineState)
-        println "get $item"
+        machineState.getItem(item)
     }
     
     def accept(closure) {
