@@ -36,7 +36,7 @@ class Machine {
     def getQ() { machineState.addInsertedMoney(MoneyState.QUARTER) }
     def getR() { machineState.addInsertedMoney(MoneyState.DOLLAR) }
     
-    def getCoinreturn() { machineState.insertedMoney = MoneyState.ZERO }
+    def getCoin_return() { machineState.insertedMoney = MoneyState.ZERO }
     
     def get(def item) {
         machineState.getItem(item)
@@ -59,3 +59,4 @@ class Machine {
 }
 
 def machine = new Machine()
+//machine.metaClass.'abc' = { println "abc" }
