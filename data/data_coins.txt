@@ -2,7 +2,7 @@
 // NOTE: must separate commands with ;
 // input is case-insensitive
 
-// For now, SERVICE looks like a method call and VERIFY requires quotes
+// For now, SERVICE looks like a method call and VERIFY requires quotes, and 'a$' denotes a dollar
 
 // initial state
 // N = name, P = price, C = count 
@@ -10,7 +10,7 @@ SERVICE ([50, 50, 50, 50], [ [N:'A', P:'65', C:'10'] ])
 
 VERIFY "[50, 50, 50, 50] [0, 0, 0, 0] [ [N:'A', P:'65', C:'10'] ]"
 
-N ; D ; Q ; $ ; $ ; D ; Q ; N
+N ; D ; Q ; a$ ; a$ ; D ; Q ; N
 
 VERIFY "[50, 50, 50, 50] [2, 2, 2, 2] [ [N:'A', P:'65', C:'10'] ]"
 

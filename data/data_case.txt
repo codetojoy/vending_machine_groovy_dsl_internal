@@ -2,7 +2,7 @@
 // NOTE: must separate commands with ;
 // input is case-insensitive
 
-// For now, SERVICE looks like a method call and VERIFY requires quotes
+// For now, SERVICE looks like a method call and VERIFY requires quotes, and 'a$' denotes a dollar
 
 // initial state
 // N = name, P = price, C = count 

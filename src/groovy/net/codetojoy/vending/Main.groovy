@@ -8,9 +8,7 @@ package net.codetojoy.vending
 
 def dslDef = new File("src/groovy/net/codetojoy/vending/dsl/VendingDSL.groovy").text
 
-def text = new File("${args[0]}").text.toLowerCase()
-// cheating!
-def dsl = text.replace("\$", "r")
+def dsl = new File("${args[0]}").text.toLowerCase()
 
 def dslScript = 
 """

@@ -18,6 +18,13 @@ class Machine {
         machineState.availableChange = new MoneyState(coinList)
         machineState.inventoryState = new InventoryState(inventoryMap)        
     }
+        
+    def propertyMissing(String name) {
+        if (name == "a\$") {
+            // dollar
+            machineState.addInsertedMoney(MoneyState.DOLLAR) 
+        }
+    }
     
     def verify(def expectedStr) {
         def expected = expectedStr.trim()
@@ -34,7 +41,6 @@ class Machine {
     def getN() { machineState.addInsertedMoney(MoneyState.NICKEL) }
     def getD() { machineState.addInsertedMoney(MoneyState.DIME) }
     def getQ() { machineState.addInsertedMoney(MoneyState.QUARTER) }
-    def getR() { machineState.addInsertedMoney(MoneyState.DOLLAR) }
     
     def getCoin_return() { machineState.insertedMoney = MoneyState.ZERO }
     
@@ -59,4 +65,3 @@ class Machine {
 }
 
 def machine = new Machine()
-//machine.metaClass.'abc' = { println "abc" }
