@@ -6,15 +6,12 @@
 
 package net.codetojoy.vending
 
-def dslDef = new File("src/groovy/net/codetojoy/vending/dsl/VendingDSL.groovy").text
+def dslDef = new File("${args[0]}").text
 
-def dsl = new File("${args[0]}").text.toLowerCase()
+def input = new File("${args[1]}").text.toLowerCase()
 
-def dslScript = 
-"""
-${dslDef}
-machine.accept { ${dsl} }        
-"""
+// dslDef creates the object 'machine', which accepts the DSL input:
+def dslScript = " $dslDef ; machine.accept { $input } "
 
 new GroovyShell().evaluate(dslScript)
 

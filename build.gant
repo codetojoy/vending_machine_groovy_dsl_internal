@@ -7,6 +7,7 @@ final dataDir = ant.project.properties.'data.dir'
 final groovyHome = ant.project.properties.'groovy.home'
 final groovyEmbeddedJar = groovyHome + ant.project.properties.'groovy.embedded.jar'
 final reportDir = ant.project.properties.'report.dir'
+final dslEngine = ant.project.properties.'dsl.engine'
 
 // clean (implicit target)
 includeTargets << gant.targets.Clean
@@ -78,7 +79,8 @@ final runOneFile = { dataFile ->
             ant.pathelement( location : '${classes.dir}')
             ant.path( refid : 'groovy.classpath' )
         }
-        ant.arg( value: dataFile )
+        ant.arg( value : dslEngine)
+        ant.arg( value : dataFile )
     }
 
     if (errorLog.exists()) {
