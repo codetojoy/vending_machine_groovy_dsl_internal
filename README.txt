@@ -1,9 +1,10 @@
 
 *** Introduction
 
-This is a work-in-progress example for the Vending Machine, as highlighted by the Lambda Lounge.
+This is a DSL exercise for Lambda Lounge, circa 2009.
 
-http://lambdalounge.org/meeting-archive/
+In 2013, I've decided to revisit it to update the legacy Gant build to Gradle.
+Also, I will try to improve the DSL using Groovy 2.x.
 
 This example uses Groovy to implement an internal DSL. It is a much Groovier
 departure from the first project which was a Java-esque style.
@@ -42,4 +43,3 @@ http://gant.codehaus.org/
 -- you really have to trust the tests (see above). they become intrinsic to the experience
 -- <TODO>more on the DSL experience</TODO>
 
-test check-in Jan 2013
