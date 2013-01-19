@@ -41,3 +41,5 @@ http://gant.codehaus.org/
 -- testing is essential here
 -- you really have to trust the tests (see above). they become intrinsic to the experience
 -- <TODO>more on the DSL experience</TODO>
+
+test check-in Jan 2013
