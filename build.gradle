@@ -1,0 +1,59 @@
+
+apply plugin: 'groovy'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    groovy 'org.codehaus.groovy:groovy:1.6.4'
+}
+
+sourceSets.main.groovy.srcDirs 'src'
+sourceSets.test.groovy.srcDirs 'test'
+
+def runOneFile = { dataFile ->
+    def errorLog = new File("error.log")
+    errorLog.delete()
+
+    def groovyHome = project.groovyHome
+    def groovyEmbedJar = groovyHome + project.groovyEmbedJar
+    assert new File(groovyEmbedJar).exists() 
+
+    ant.path(id: 'groovy.classpath' ) {
+        ant.pathelement(location: '${classes.dir}' )
+        ant.pathelement(location: "${groovyEmbedJar}" )    
+        ant.fileset(dir: "${groovyHome}/lib") {
+            ant.include(name: '**/*.jar' )
+        }
+    }
+
+    ant.java(classname: project.mainApp) {
+        ant.classpath() {
+            ant.pathelement(location: project.classesDir)
+            ant.path(refid: 'groovy.classpath' )
+        }
+        ant.arg( value : dslEngine)
+        ant.arg( value : dataFile )
+    }
+
+    if (errorLog.exists()) {
+        ant.fail(message : "found error.log for file: $dataFile")
+    } else {
+        println "success!  ${dataFile}"
+    }    
+}
+
+task runOne(dependsOn: 'build') << {
+    def dataFile = new File(dataDir + File.separator + project.dataFile)
+    runOneFile(dataFile)
+}
+
+task runAll(dependsOn: 'build') << {
+    new File(project.dataDir).eachFileRecurse { file ->
+        if (file.isFile()) { 
+             runOneFile(file)
+        }
+    }
+}
+
