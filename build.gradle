@@ -1,40 +1,57 @@
 
 apply plugin: 'groovy'
 
+configurations {
+    releaseJars
+}
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    groovy 'org.codehaus.groovy:groovy:1.6.4'
+    groovy 'org.codehaus.groovy:groovy-all:1.6.4'
+    releaseJars 'org.codehaus.groovy:groovy-all:1.6.4'
 }
 
 sourceSets.main.groovy.srcDirs 'src'
 sourceSets.test.groovy.srcDirs 'test'
 
-def runOneFile = { dataFile ->
-    def errorLog = new File("error.log")
-    errorLog.delete()
+task init {
+    delete "${buildDir}/jars"
+    mkdir "${buildDir}/jars"
+    delete stagingDir
+    mkdir stagingDir
+}
 
-    def groovyHome = project.groovyHome
-    def groovyEmbedJar = groovyHome + project.groovyEmbedJar
-    assert new File(groovyEmbedJar).exists() 
+task copyReleaseJars(type: Copy, dependsOn: 'init') {
+    into "${buildDir}/jars"
+    from configurations.releaseJars
+}
 
-    ant.path(id: 'groovy.classpath' ) {
-        ant.pathelement(location: '${classes.dir}' )
-        ant.pathelement(location: "${groovyEmbedJar}" )    
-        ant.fileset(dir: "${groovyHome}/lib") {
-            ant.include(name: '**/*.jar' )
-        }
+jar.archiveName 'vending.jar'
+jar.manifest {
+    attributes 'Main-Class' : 'net.codetojoy.vending.Main' 
+    attributes 'Class-Path' : 'jars/groovy-all-1.6.4.jar'
+}
+
+task myBuild(dependsOn: ['copyReleaseJars', 'jar']) << {
+    ant.zip(destfile: "${buildDir}/vending.zip") {
+        zipfileset(dir: "${buildDir}/jars", prefix: "jars")
+        zipfileset(file: "${buildDir}/libs/vending.jar")
+        zipfileset(file: dslEngine)
     }
 
-    ant.java(classname: project.mainApp) {
-        ant.classpath() {
-            ant.pathelement(location: project.classesDir)
-            ant.path(refid: 'groovy.classpath' )
-        }
-        ant.arg( value : dslEngine)
-        ant.arg( value : dataFile )
+    ant.unzip(src: "${buildDir}/vending.zip", dest: stagingDir)
+}
+
+def runOneFile = { dataFile ->
+    def errorLog = new File(stagingDir + File.separator + "error.log")
+    errorLog.delete()
+
+    ant.java(jar: dslJar, fork: "true") {
+        ant.arg(value: dslEngine)
+        ant.arg(value: dataFile)
     }
 
     if (errorLog.exists()) {
@@ -44,12 +61,12 @@ def runOneFile = { dataFile ->
     }    
 }
 
-task runOne(dependsOn: 'build') << {
+task runOne(dependsOn: 'myBuild') << {
     def dataFile = new File(dataDir + File.separator + project.dataFile)
     runOneFile(dataFile)
 }
 
-task runAll(dependsOn: 'build') << {
+task runAll(dependsOn: 'myBuild') << {
     new File(project.dataDir).eachFileRecurse { file ->
         if (file.isFile()) { 
              runOneFile(file)
