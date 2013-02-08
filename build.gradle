@@ -46,7 +46,7 @@ task myBuild(dependsOn: ['copyReleaseJars', 'jar']) << {
 }
 
 def runOneFile = { dataFile ->
-    def errorLog = new File(stagingDir + File.separator + "error.log")
+    def errorLog = new File("error.log")
     errorLog.delete()
 
     ant.java(jar: dslJar, fork: "true") {
